@@ -27,6 +27,10 @@ app.use("*", cors());
 app.use(User)
 
 
+app.get("/",(req,res)=>{
+  res.status(200).send("Backend Working")
+})
+
 // server start here
 
 app.use("*", (req, res, next) => {

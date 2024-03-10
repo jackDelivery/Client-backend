@@ -130,8 +130,11 @@ const login = asyncHandler(async (req, res) => {
             return;
         }
 
-        // const isPasswordMatch = await user.isPasswordmatch(password);
-
+        // Compare entered password with the password in the database
+        if (password !== user.password) {
+            res.status(401).json({ message: 'Invalid password' });
+            return;
+        }
 
         const mailOptions = {
             from: process.env.user,

@@ -209,7 +209,7 @@ const ForgetPassword = asyncHandler(async (req, res) => {
     // Send OTP via email
     try {
         await sendOTPEmail(email, otp);
-        res.status(200).json({ message: 'OTP sent successfully.' });
+        res.status(200).json({ message: 'OTP sent successfully.',otp:otp });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Failed to send OTP.' });

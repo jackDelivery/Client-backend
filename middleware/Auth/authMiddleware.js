@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { userModel } = require("../../model/userModel");
+const { CycoModel } = require("../../model/userCycoModel");
 const expressAsyncHandler = require("express-async-handler");
 
 const authMiddleware = expressAsyncHandler(async (req, res, next) => {
@@ -31,4 +32,19 @@ const authMiddleware = expressAsyncHandler(async (req, res, next) => {
 });
 
 
-module.exports = authMiddleware;
+// Admin Handle Logic
+
+
+const isAdmin = expressAsyncHandler(async (req, res, next) => {
+  const { email } = req.user;
+  const adminUser = await CycoModel.findOne({ email });
+
+  if (adminUser.role !== "admin") {
+    throw new Error("You are not admin ");
+  } else {
+    next();
+  }
+});
+
+
+module.exports = { authMiddleware, isAdmin };

@@ -47,7 +47,7 @@ const register = asyncHandler(async (req, res) => {
         const otp = generateOTP();
 
         // Save user to database with OTP creation timestamp
-        const newUser = new userModel({ email, password, otp, isVerified: false });
+        const newUser = new CycoModel({ email, password, otp, isVerified: false });
 
         await newUser.save();
 
@@ -79,10 +79,50 @@ const register = asyncHandler(async (req, res) => {
 })
 
 
-// verify
+// verify otp
+
+const VerifyOtp = asyncHandler(async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        const existingOTP = await CycoModel.findOne({ email, otp });
+
+        if (!existingOTP) {
+            return res.status(400).json({ message: 'Invalid OTP.' });
+        }
+
+        // Delete only the OTP entry
+        await CycoModel.updateOne(
+            { email },
+            { $set: { isVerified: true }, $unset: { otp: 1 } }
+        );
+
+        const mailOptions = {
+            from: process.env.user,
+            to: email,
+            subject: 'Verified',
+            text: `Otp Verification Completed`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                res.status(500).json({ message: 'Failed to send verification email.' });
+            } else {
+                console.log('Email sent: ' + info.response);
+                res.status(200).json({ message: 'OTP verified successfully.' });
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error verifying OTP.' });
+    }
+});
+
+
 
 // login
 
 
 
-module.exports = { register }
+module.exports = { register, VerifyOtp }

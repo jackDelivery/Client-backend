@@ -42,7 +42,7 @@ const CycoSchema = new Schema({
         unique: true,
         trim: true
     },
-    urls: [String],
+    Cnicurls: [String],
     Pdfurl: [{
         name: String,
         url: String,

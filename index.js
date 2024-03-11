@@ -10,7 +10,7 @@ const morgan = require("morgan");
 
 // routes import here
 const User = require("./routes/userRoute");
-
+const Cyco = require("./routes/cycoRoute");
 
 // middleware calling here
 app.use(express.json())
@@ -25,9 +25,10 @@ app.use("*", cors());
 
 // calling routes here
 app.use(User)
+app.use(Cyco)
 
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   res.status(200).send("Backend Working")
 })
 

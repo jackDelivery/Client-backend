@@ -65,7 +65,7 @@ const CreateUser = asyncHandler(async (req, res) => {
                 res.status(500).send('Failed to send OTP.');
             } else {
                 console.log('Email sent: ' + info.response);
-                res.status(200).send('OTP sent successfully.');
+                res.status(200).json({message:'OTP sent successfully.'});
             }
         });
 
@@ -93,7 +93,7 @@ const allRegisterUser = asyncHandler(async (req, res) => {
         const existingUser = await userModel.findOne({ email });
 
         if (!existingUser) {
-            return res.status(404).send("User not found!");
+            return res.status(404).json({message:"User not found!"});
         }
 
         // Update the existing user document
@@ -104,7 +104,7 @@ const allRegisterUser = asyncHandler(async (req, res) => {
         // Save the updated user document
         await existingUser.save();
 
-        res.status(200).send("User updated successfully!");
+        res.status(200).json({message:"User updated successfully!"});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Error updating user.' });
@@ -275,10 +275,10 @@ const VerifyOtp = asyncHandler(async (req, res) => {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-                res.status(500).send('Failed to send verification email.');
+                res.status(500).json({message:'Failed to send verification email.'});
             } else {
                 console.log('Email sent: ' + info.response);
-                res.status(200).send('OTP verified successfully.');
+                res.status(200).json({message:'OTP verified successfully.'});
             }
         });
     } catch (error) {

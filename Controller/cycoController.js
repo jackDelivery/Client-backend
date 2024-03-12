@@ -237,7 +237,140 @@ const createPdf = asyncHandler(async (req, res) => {
 
 
 // login
+const login = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        if (!email || !password) {
+            res.status(400).json({ message: "All Fields are Required" });
+            return;
+        }
+
+        const user = await CycoModel.findOne({ email });
+
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+
+        // Compare entered password with the password in the database
+        if (password !== user.password) {
+            res.status(401).json({ message: 'Invalid password' });
+            return;
+        }
+
+        const mailOptions = {
+            from: process.env.user,
+            to: user.email,
+            subject: 'Welcome back ' + user?.email,
+            text: `Congratulations`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                // Handle error
+            } else {
+                console.log('Email sent: ' + info.response);
+                // Handle success
+            }
+        });
+
+        sendToken(res, user, 200, "Login Successfully");
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error logging in' });
+    }
+});
 
 
 
-module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf }
+// Function to send email with OTP
+const sendOTPEmail = async (email, otp) => {
+    const mailOptions = {
+        from: process.env.user,
+        to: email,
+        subject: 'Password Reset OTP',
+        text: `Your OTP for password reset is: ${otp}`,
+    };
+
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                reject('Failed to send OTP.');
+            } else {
+                console.log('Email sent: ' + info.response);
+                resolve('OTP sent successfully.');
+            }
+        });
+    });
+};
+
+
+// forget Password
+
+const ForgetPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    // Check if user exists
+    const user = await CycoModel.findOne({ email });
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+    }
+
+    // Generate OTP
+    const otp = generateOTP();
+
+    // Save OTP to user
+    user.resetToken = otp;
+    user.resetTokenExpiration = Date.now() + 5 * 60 * 1000; // OTP expires in 5 minutes
+    await user.save();
+
+    // Send OTP via email
+    try {
+        await sendOTPEmail(email, otp);
+        res.status(200).json({ message: 'OTP sent successfully.', otp: otp });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Failed to send OTP.' });
+    }
+});
+
+
+
+
+// reset Password
+
+const ResetPassword = asyncHandler(async (req, res) => {
+    try {
+        const { email, otp, newPassword } = req.body;
+
+        // Find user in the database
+        const user = await CycoModel.findOne({ email, resetToken: otp });
+
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid OTP or OTP expired.' });
+        }
+
+        user.password = newPassword;
+        user.resetToken = '';
+        await user.save();
+        user.resetToken = undefined;
+        user.resetTokenExpiration = undefined;
+
+        // Save updated user
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successfully.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+
+
+module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword }

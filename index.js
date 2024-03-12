@@ -6,6 +6,15 @@ const cors = require("cors")
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const cloudinary = require("cloudinary").v2;
+
+
+
+cloudinary.config({
+    cloud_name: process.env.CloudName,
+    api_key: process.env.API_key,
+    api_secret: process.env.API_secret,
+})
 
 
 // routes import here

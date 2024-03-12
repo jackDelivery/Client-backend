@@ -40,7 +40,7 @@ const isAdmin = expressAsyncHandler(async (req, res, next) => {
   const adminUser = await CycoModel.findOne({ email });
 
   if (adminUser.role !== "admin") {
-    throw new Error("You are not admin ");
+    throw new Error("Admin not Approved right now!");
   } else {
     next();
   }

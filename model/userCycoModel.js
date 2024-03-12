@@ -42,11 +42,11 @@ const CycoSchema = new Schema({
         unique: true,
         trim: true
     },
-    Cnicurls: [String],
-    Pdfurl: [{
-        name: String,
-        url: String,
-    }],
+    Cnicurls: [],
+    Pdfurl: {
+        type: String,
+        default: "",
+    },
     isVerified: {
         type: Boolean,
         default: false // Default value set kiya gaya hai false

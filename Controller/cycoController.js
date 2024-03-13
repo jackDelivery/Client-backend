@@ -167,6 +167,38 @@ const createLicinece = asyncHandler(async (req, res) => {
 })
 
 
+// create age gender
+
+const CreateAge = asyncHandler(async (req, res) => {
+    try {
+        const { email, age, gender } = req.body;
+
+        if (!email && !age && !gender) {
+            return res.status(400).send("All Fields Required!")
+        }
+
+        const existingUser = await CycoModel.findOne({ email });
+
+        if (!existingUser) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+
+        existingUser.age = age;
+        existingUser.gender = gender;
+
+        await existingUser.save();
+
+        res.status(200).json({ message: "User updated successfully!" });
+
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating user.' });
+    }
+})
+
+
+
+
 // create nic here
 const createCinic = asyncHandler(async (req, res) => {
     const { email, cnicNumber } = req.body;
@@ -177,6 +209,8 @@ const createCinic = asyncHandler(async (req, res) => {
 
     try {
         const uploader = (path) => CloudUploadImage.cloudinaryUploadImg(path, 'images');
+
+        
         const urls = [];
         const files = req.files;
         for (const file of files) {
@@ -373,4 +407,4 @@ const ResetPassword = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword }
+module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword, CreateAge }

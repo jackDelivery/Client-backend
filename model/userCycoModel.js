@@ -52,7 +52,7 @@ const CycoSchema = new Schema({
         default: false // Default value set kiya gaya hai false
     },
     isApproved: {
-        type: String,
+        type: Boolean,
         default: false
     },
     licenceNumber: {

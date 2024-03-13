@@ -47,4 +47,26 @@ const isAdmin = expressAsyncHandler(async (req, res, next) => {
 });
 
 
-module.exports = { authMiddleware, isAdmin };
+const isAdminApproved = async (req, res, next) => {
+  const { email } = req.body; // Use req.user to get the logged-in user's email
+  try {
+    const adminUser = await CycoModel.findOne({ email });
+
+    if (!adminUser) {
+      throw new Error("Admin not found");
+    }
+
+    if (adminUser.isApproved != true) {
+      throw new Error("Admin not approved yet");
+    }
+
+    next(); // If everything is fine, proceed to the next middleware or route
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
+};
+``
+
+
+
+module.exports = { authMiddleware, isAdmin, isAdminApproved };

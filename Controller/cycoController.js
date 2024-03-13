@@ -170,13 +170,13 @@ const createLicinece = asyncHandler(async (req, res) => {
 // create age gender
 
 const CreateAge = asyncHandler(async (req, res) => {
+    const { email, age, gender } = req.body;
+
+    if (!email && !age && !gender) {
+        return res.status(400).send("All Fields Required!")
+    }
+
     try {
-        const { email, age, gender } = req.body;
-
-        if (!email && !age && !gender) {
-            return res.status(400).send("All Fields Required!")
-        }
-
         const existingUser = await CycoModel.findOne({ email });
 
         if (!existingUser) {
@@ -210,7 +210,7 @@ const createCinic = asyncHandler(async (req, res) => {
     try {
         const uploader = (path) => CloudUploadImage.cloudinaryUploadImg(path, 'images');
 
-        
+
         const urls = [];
         const files = req.files;
         for (const file of files) {

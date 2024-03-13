@@ -23,7 +23,6 @@ const storage = multer.diskStorage({
     },
 });
 
-
 // file type checking
 
 const multerFilter = (req, file, cb) => {
@@ -46,7 +45,7 @@ const multerFilter = (req, file, cb) => {
 const imagePhotoUpload = multer({
     storage: storage,
     fileFilter: multerFilter,
-    limits: { fileSize: 1000000 },
+    limits: { fileSize: 10000000 }, // 10 MB
 });
 
 const imagePhotoUpload1 = multer({
@@ -77,6 +76,7 @@ const ImgResize = async (req, res, next) => {
 
 // nic image function
 
+// require("../../public/images/nic")
 const nicImgResize = async (req, res, next) => {
     if (!req.files) return next();
     await Promise.all(
@@ -91,6 +91,7 @@ const nicImgResize = async (req, res, next) => {
     );
     next();
 };
+
 
 
 

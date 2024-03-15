@@ -37,11 +37,15 @@ const CreateUser = asyncHandler(async (req, res) => {
 
         const existingUser = await userModel.findOne({ email, isVerified: false });
 
-
-        if (existingUser && existingUser.otp) {
-            res.status(200).send('OTP already sent recently. Please check your email.');
-            return;
+        if(existingUser){
+            throw new Error("user with this email already exit as patient")
         }
+
+
+        // if (existingUser && existingUser.otp) {
+        //     res.status(200).send('OTP already sent recently. Please check your email.');
+        //     return;
+        // }
 
         const otp = generateOTP();
 

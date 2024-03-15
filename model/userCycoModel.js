@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const jwt = require("jsonwebtoken");
@@ -13,7 +14,7 @@ const CycoSchema = new Schema({
     email: {
         type: String,
         trim: true,
-        unique: true, // Yeh to make sure ke email unique hai
+        // Yeh to make sure ke email unique hai
         lowercase: true, // Yeh to make sure ke email case-insensitive hai
         validate: {
             validator: function (v) {

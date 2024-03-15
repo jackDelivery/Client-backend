@@ -1,4 +1,6 @@
 const { CycoModel } = require("../model/userCycoModel");
+const { userModel } = require("../model/userModel");
+
 const asyncHandler = require('express-async-handler')
 const nodemailer = require("nodemailer");
 const { sendToken } = require("../middleware/utils/SendToken");
@@ -55,24 +57,24 @@ const register = asyncHandler(async (req, res) => {
         }
 
         const existingUser = await CycoModel.findOne({ email });
+        const existingUser2 = await userModel.findOne({ email });
 
 
 
-        if (existingUser) {
-            throw new Error("user with this email already exit as psychologist")
+        if (existingUser !== existingUser2) {
+            throw new Error("user with this email already exit as patient or psychologist")
         }
 
 
 
 
         if (existingUser && existingUser.otp) {
-            res.status(200).send('OTP already sent recently. Please check your email.');
-            return;
+            return res.status(200).send('OTP already sent recently. Please check your email.');
         }
 
         // Save user to database with OTP creation timestamp
         const newUser = new CycoModel({ email, password, otp, isVerified: false });
-
+        console.log(newUser)
         await newUser.save();
 
 

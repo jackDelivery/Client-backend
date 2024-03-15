@@ -1,4 +1,5 @@
 const { userModel } = require("../model/userModel");
+const { CycoModel } = require("../model/userCycoModel");
 const asyncHandler = require('express-async-handler')
 const nodemailer = require("nodemailer");
 const { sendToken } = require("../middleware/utils/SendToken");
@@ -36,10 +37,13 @@ const CreateUser = asyncHandler(async (req, res) => {
         }
 
         const existingUser = await userModel.findOne({ email, isVerified: false });
+        const existingUser2 = await CycoModel.findOne({ email });
 
-        if(existingUser){
-            throw new Error("user with this email already exit as patient")
+        
+        if (existingUser !== existingUser2) {
+            throw new Error("user with this email already exit as patient or psychologist")
         }
+
 
 
         // if (existingUser && existingUser.otp) {

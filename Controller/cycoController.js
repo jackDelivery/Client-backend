@@ -44,6 +44,9 @@ function generateOTP() {
 
 // register
 const register = asyncHandler(async (req, res) => {
+
+    const otp = generateOTP();
+
     try {
         const { email, password } = req.body;
 
@@ -51,7 +54,7 @@ const register = asyncHandler(async (req, res) => {
             return res.status(400).json({ error: "All fields are required" });
         }
 
-        const existingUser = await CycoModel.findOne({ email, isVerified: false });
+        const existingUser = await CycoModel.findOne({ email });
 
 
 
@@ -62,12 +65,10 @@ const register = asyncHandler(async (req, res) => {
 
 
 
-        // if (existingUser && existingUser.otp) {
-        //     res.status(200).send('OTP already sent recently. Please check your email.');
-        //     return;
-        // }
-
-        const otp = generateOTP();
+        if (existingUser && existingUser.otp) {
+            res.status(200).send('OTP already sent recently. Please check your email.');
+            return;
+        }
 
         // Save user to database with OTP creation timestamp
         const newUser = new CycoModel({ email, password, otp, isVerified: false });
@@ -313,7 +314,7 @@ const login = asyncHandler(async (req, res) => {
         }
 
 
-        
+
 
 
         const mailOptions = {

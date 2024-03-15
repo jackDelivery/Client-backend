@@ -287,13 +287,18 @@ const login = asyncHandler(async (req, res) => {
             return;
         }
 
+        if (user.isVerified != true) {
+            throw new Error("Your Account is not verified!")
+        }
+
+
         // Compare entered password with the password in the database
         if (password !== user.password) {
             res.status(401).json({ message: 'Invalid password' });
             return;
         }
 
-    
+
 
         const mailOptions = {
             from: process.env.user,

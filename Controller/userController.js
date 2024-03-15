@@ -65,7 +65,7 @@ const CreateUser = asyncHandler(async (req, res) => {
                 res.status(500).send('Failed to send OTP.');
             } else {
                 console.log('Email sent: ' + info.response);
-                res.status(200).json({message:'OTP sent successfully.'});
+                res.status(200).json({ message: 'OTP sent successfully.' });
             }
         });
 
@@ -93,7 +93,7 @@ const allRegisterUser = asyncHandler(async (req, res) => {
         const existingUser = await userModel.findOne({ email });
 
         if (!existingUser) {
-            return res.status(404).json({message:"User not found!"});
+            return res.status(404).json({ message: "User not found!" });
         }
 
         // Update the existing user document
@@ -104,7 +104,7 @@ const allRegisterUser = asyncHandler(async (req, res) => {
         // Save the updated user document
         await existingUser.save();
 
-        res.status(200).json({message:"User updated successfully!"});
+        res.status(200).json({ message: "User updated successfully!" });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Error updating user.' });
@@ -129,6 +129,11 @@ const login = asyncHandler(async (req, res) => {
             res.status(404).json({ message: 'User not found' });
             return;
         }
+
+        if (user.isVerified != true) {
+            throw new Error("Your account is not verify please verify your account via otp")
+        }
+
 
         // Compare entered password with the password in the database
         if (password !== user.password) {
@@ -157,7 +162,7 @@ const login = asyncHandler(async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Error logging in' });
+        res.status(500).json({ message: error?.message });
     }
 });
 
@@ -209,7 +214,7 @@ const ForgetPassword = asyncHandler(async (req, res) => {
     // Send OTP via email
     try {
         await sendOTPEmail(email, otp);
-        res.status(200).json({ message: 'OTP sent successfully.',otp:otp });
+        res.status(200).json({ message: 'OTP sent successfully.', otp: otp });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Failed to send OTP.' });
@@ -275,10 +280,10 @@ const VerifyOtp = asyncHandler(async (req, res) => {
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
-                res.status(500).json({message:'Failed to send verification email.'});
+                res.status(500).json({ message: 'Failed to send verification email.' });
             } else {
                 console.log('Email sent: ' + info.response);
-                res.status(200).json({message:'OTP verified successfully.'});
+                res.status(200).json({ message: 'OTP verified successfully.' });
             }
         });
     } catch (error) {

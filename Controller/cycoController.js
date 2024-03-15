@@ -9,18 +9,12 @@ const bcrypt = require("bcrypt")
 const crypto = require("crypto")
 const CloudUploadImage = require("../utils/Cloudniary");
 const fs = require("fs");
-const serviceAccount = require('../firebaseAdminSdk.json');
-const firebase = require('firebase-admin');
+
+
 const path = require("path")
 
 
 
-firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccount),
-    storageBucket: 'gs://clientbackend-b2661.appspot.com'
-});
-
-const bucket = firebase.storage().bucket();
 
 
 

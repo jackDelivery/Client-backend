@@ -53,7 +53,7 @@ const isAdminApproved = async (req, res, next) => {
     const adminUser = await CycoModel.findOne({ email });
 
     if (!adminUser) {
-      throw new Error("Admin not found");
+      throw new Error("User not found");
     }
 
     if (adminUser.isApproved != true) {

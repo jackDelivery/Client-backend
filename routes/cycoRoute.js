@@ -10,7 +10,7 @@ router.route("/cyco/register").post(register);
 router.route("/cyco/verify").post(VerifyOtp);
 router.route("/cyco/forgetPassword").post(ForgetPassword);
 router.route("/cyco/resetPassword").post(ResetPassword);
-router.route("/cyco/login").post(isAdminApproved, login);
+router.route("/cyco/login").post( login);
 router.route("/cyco/age-gender").post(CreateAge);
 
 router.route("/cyco/licience").post(imagePhotoUpload1.single("image"), ImgResize, createLicinece);

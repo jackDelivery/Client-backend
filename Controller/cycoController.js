@@ -305,7 +305,7 @@ const login = asyncHandler(async (req, res) => {
             }, 60000); // 60000 milliseconds = 1 minute
         }
 
-        if (user.isVerified != true) {
+        if (user.isVerified !== true) {
             throw new Error("Your account is not verify please verify your account via otp")
         }
 
@@ -334,7 +334,7 @@ const login = asyncHandler(async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Error logging in' });
+        res.status(500).json({ message: error?.message});
     }
 });
 

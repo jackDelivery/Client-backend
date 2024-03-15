@@ -39,7 +39,6 @@ const CycoSchema = new Schema({
     },
     cnicNumber: {
         type: String,
-        unique: true,
         trim: true
     },
     Cnicurls: [],

@@ -1,4 +1,5 @@
-const { Schema, default: mongoose, Model } = require("mongoose");
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 
@@ -72,17 +73,7 @@ const CycoSchema = new Schema({
 
 
 
-},
-    {
-        toJSON: {
-            virtuals: true,
-        },
-        toObject: {
-            virtuals: true,
-        },
-        timestamps: true,
-    }
-)
+})
 
 
 

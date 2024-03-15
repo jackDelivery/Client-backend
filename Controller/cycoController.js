@@ -287,6 +287,12 @@ const login = asyncHandler(async (req, res) => {
             return;
         }
 
+        if (user.isVerified !== true) {
+            setTimeout(async () => {
+                await CycoModel.deleteMany({ email: user?.email });
+            }, 60000); // 60000 milliseconds = 1 minute
+        }
+
         if (user.isVerified != true) {
             throw new Error("Your account is not verify please verify your account via otp")
         }

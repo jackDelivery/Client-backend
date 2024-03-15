@@ -288,7 +288,7 @@ const login = asyncHandler(async (req, res) => {
         }
 
         if (user.isVerified != true) {
-            throw new Error("Your Account is not verified!")
+            throw new Error("Your account is not verify please verify your account via otp")
         }
 
 

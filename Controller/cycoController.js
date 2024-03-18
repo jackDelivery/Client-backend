@@ -310,9 +310,6 @@ const login = asyncHandler(async (req, res) => {
         }
 
 
-
-
-
         const mailOptions = {
             from: process.env.user,
             to: user.email,
@@ -334,7 +331,7 @@ const login = asyncHandler(async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error?.message});
+        res.status(500).json({ message: error?.message });
     }
 });
 
@@ -425,6 +422,53 @@ const ResetPassword = asyncHandler(async (req, res) => {
 });
 
 
+// admin approved
+
+const AdminApproved = asyncHandler(async (req, res) => {
+
+    const { isApproved, _id } = req.body;
+
+    try {
+
+        const approved = await CycoModel.findByIdAndUpdate(_id, {
+            isApproved: isApproved
+        }, { new: true })
+
+        if (!approved) {
+            throw new Error("User Not Found")
+        }
 
 
-module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword, CreateAge }
+        res.status(200).json({ message: "Admin Approved Your Account", approved: approved });
+
+
+
+        const mailOptions = {
+            from: process.env.user,
+            to: approved?.email,
+            subject: 'Admin Approved Your Account ' + approved?.email,
+            text: `isApproved ${approved?.isApproved}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                // Handle error
+            } else {
+                console.log('Email sent: ' + info.response);
+                // Handle success
+            }
+        });
+
+
+
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
+
+
+
+
+module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword, CreateAge, AdminApproved }

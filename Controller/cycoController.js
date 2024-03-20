@@ -469,6 +469,85 @@ const AdminApproved = asyncHandler(async (req, res) => {
 })
 
 
+const adminApprovedGet = asyncHandler(async (req, res) => {
+    try {
+
+        let result = await CycoModel.find({});
+
+        if (!result) {
+            throw new Error("user not found!")
+        }
+
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
 
 
-module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword, CreateAge, AdminApproved }
+// delete activate users
+
+const AdminDeleteUsers = asyncHandler(async (req, res) => {
+    const { id } = req.params; // Assuming id is passed as a parameter
+
+    try {
+        const deletedUser = await CycoModel.findByIdAndDelete(id); // Using id parameter to find and delete user
+
+        if (!deletedUser) {
+            return res.status(404).json({ message: "User Not Found" });
+        }
+
+        // Send response if user is successfully deleted
+        res.status(200).json({ message: "Admin has deleted the user account" });
+
+        // If you want to send an email notification to the deleted user, you can uncomment the following code
+
+        const mailOptions = {
+            from: process.env.user,
+            to: deletedUser.email,
+            subject: 'Your Account has been Deleted',
+            text: 'Your account has been deleted by the admin.'
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                // Handle error
+            } else {
+                console.log('Email sent: ' + info.response);
+                // Handle success
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+module.exports = AdminDeleteUsers;
+
+
+
+
+
+// users
+
+const users = asyncHandler(async (req, res) => {
+    try {
+
+        const users = await CycoModel.find({});
+
+
+        if (!users) {
+            throw new Error("user not found");
+        }
+
+        res.status(200).send(users)
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
+
+
+
+module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword, CreateAge, AdminApproved, users, adminApprovedGet, AdminDeleteUsers }

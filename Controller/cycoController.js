@@ -550,4 +550,32 @@ const users = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword, CreateAge, AdminApproved, users, adminApprovedGet, AdminDeleteUsers }
+// admin
+
+const loginAdmin = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    // Check if user with given email exists
+    const findAdmin = await CycoModel.findOne({ email });
+
+    // If no user found, or user is not admin, throw an error
+    if (!findAdmin) {
+        throw new Error("User not found");
+    } else if (findAdmin.role !== "admin") {
+        throw new Error("You are not Admin");
+    }
+
+    // If user is admin, compare passwords
+    if (password === findAdmin.password) {
+        // Passwords match, send token and success response
+        sendToken(res, findAdmin, 200, "Login Successfully");
+        res.status(200).send(findAdmin);
+    } else {
+        // Passwords don't match, throw an error
+        throw new Error("Invalid Credentials");
+    }
+});
+
+
+
+module.exports = { register, VerifyOtp, createLicinece, createCinic, createPdf, login, ForgetPassword, ResetPassword, CreateAge, AdminApproved, users, adminApprovedGet, AdminDeleteUsers, loginAdmin }

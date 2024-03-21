@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { register, VerifyOtp, createLicinece, createCinic, createPdf, ForgetPassword, ResetPassword, login, CreateAge, AdminApproved, users, adminApprovedGet, AdminDeleteUsers } = require("../Controller/cycoController");
+const { register, VerifyOtp, createLicinece, createCinic, createPdf, ForgetPassword, ResetPassword, login, CreateAge, AdminApproved, users, adminApprovedGet, AdminDeleteUsers, loginAdmin } = require("../Controller/cycoController");
 const { ImgResize, imagePhotoUpload, nicImgResize, imagePhotoUpload1, upload } = require("../middleware/utils/UploadImages");
 const { isAdminApproved, CycoauthMiddleware, isAdmin } = require("../middleware/Auth/authMiddleware")
 
@@ -11,6 +11,7 @@ router.route("/cyco/verify").post(VerifyOtp);
 router.route("/cyco/forgetPassword").post(ForgetPassword);
 router.route("/cyco/resetPassword").post(ResetPassword);
 router.route("/cyco/login").post(isAdminApproved, login);
+router.route("/cyco/admin").post(loginAdmin);
 router.route("/cyco/login/approved").put(AdminApproved);
 router.route("/cyco/age-gender").post(CreateAge);
 router.route("/cyco/users").get(users);

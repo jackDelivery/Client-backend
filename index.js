@@ -21,6 +21,8 @@ cloudinary.config({
 const User = require("./routes/userRoute");
 const Cyco = require("./routes/cycoRoute");
 const music = require("./routes/musicRoute");
+const category = require("./routes/articleCategoryRoute");
+const Article = require("./routes/articleRoute");
 
 
 // middleware calling here
@@ -38,7 +40,8 @@ app.use("*", cors());
 app.use(User)
 app.use(Cyco)
 app.use(music)
-
+app.use(category)
+app.use(Article)
 
 app.get("/", (req, res) => {
   res.status(200).send("Backend Working")

@@ -11,15 +11,17 @@ const cloudinary = require("cloudinary").v2;
 
 
 cloudinary.config({
-    cloud_name: process.env.CloudName,
-    api_key: process.env.API_key,
-    api_secret: process.env.API_secret,
+  cloud_name: process.env.CloudName,
+  api_key: process.env.API_key,
+  api_secret: process.env.API_secret,
 })
 
 
 // routes import here
 const User = require("./routes/userRoute");
 const Cyco = require("./routes/cycoRoute");
+const music = require("./routes/musicRoute");
+
 
 // middleware calling here
 app.use(express.json())
@@ -35,6 +37,7 @@ app.use("*", cors());
 // calling routes here
 app.use(User)
 app.use(Cyco)
+app.use(music)
 
 
 app.get("/", (req, res) => {

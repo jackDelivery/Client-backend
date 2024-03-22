@@ -6,7 +6,9 @@ const articleSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    image: [],
+    image: {
+        type: String
+    },
     message: {
         type: String,
         trim: true

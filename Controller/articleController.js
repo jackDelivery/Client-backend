@@ -37,7 +37,37 @@ const createArticle = asyncHandler(async (req, res) => {
 })
 
 
+// get article
+
+const getArticle = asyncHandler(async (req, res) => {
+    try {
+        // Get the category parameter from the request query
+        const { category } = req.query;
+
+        // Define a filter object to pass to the find method
+        const filter = {};
+
+        // If category is provided, add it to the filter
+        if (category) {
+            filter.category = category;
+        }
+
+        // Find articles based on the filter or fetch all articles if no filter is provided
+        const data = await (category ? articleModel.find(filter) : articleModel.find({}));
+
+        // Check if data is empty
+        if (data.length === 0) {
+            throw new Error("No articles found for the specified category");
+        }
+
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 
 
-module.exports = { createArticle }
+
+
+module.exports = { createArticle, getArticle }

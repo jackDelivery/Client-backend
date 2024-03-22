@@ -55,6 +55,8 @@ const imagePhotoUpload1 = multer({
 });
 
 
+console.log(imagePhotoUpload1)
+
 
 //   Image Resizing
 

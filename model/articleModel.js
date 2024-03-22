@@ -7,7 +7,8 @@ const articleSchema = new mongoose.Schema({
         trim: true
     },
     image: {
-        type: String
+        type: String,
+        default: "https://contenthub-static.grammarly.com/blog/wp-content/uploads/2022/08/BMD-3398.png"
     },
     message: {
         type: String,
